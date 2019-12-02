@@ -51,6 +51,28 @@ class App extends Component {
     })
   };
 
+  deleteFromDB = idToDelete => {
+    let objIdToDelete = null;
+
+    this.state.data.forEach(dat => {
+      if (String(dat.id) === String(idToDelete)) {
+        objIdToDelete = dat.id;
+      }
+    });
+
+    axios({
+      url: 'https://localhost:3001/api/deleteData',
+      method: 'DELETE',
+      data: {
+        id: objIdToDelete
+      }
+    }).then((response) => {
+      console.log(response);
+    }).catch((error) => {
+      console.log(error);
+    });
+  };
+
   renderListItems() {
     //Destructing the data object from our state object
     const { data } = this.state;
@@ -84,8 +106,12 @@ class App extends Component {
           <button onClick={ () => this.postDataToDB(this.state.message) }>ADD</button>        
         </div>
         <div>
-          <input />
-          <button>DELETE</button>        
+          <input 
+          type='text'
+          placeholder='Enter ID of an Item to Delete'
+          onChange={ event => this.setState({ idToDelete: event.target.value }) }
+          />
+          <button onClick={() => this.deleteFromDB(this.state.idToDelete)}>DELETE</button>        
         </div>
         <div>
           <input />
